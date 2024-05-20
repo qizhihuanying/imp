@@ -5,13 +5,21 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.common.exceptions import WebDriverException
+import os
 
 MAX_WAIT = 10
+REAL_SERVER = '120.46.156.180'
  
 class NewVisitorTest(StaticLiveServerTestCase):
     
     def setUp(self):
+        os.environ.setdefault('REAL_SERVER', REAL_SERVER)
         self.browser = webdriver.Chrome()
+        real_server = os.environ.get('REAL_SERVER')
+        if real_server:
+            self.live_server_url = 'http://' + real_server
+        else:
+            print("REAL_SERVER environment variable not set, using default live server URL")
         
     def tearDown(self):
         self.browser.quit()
